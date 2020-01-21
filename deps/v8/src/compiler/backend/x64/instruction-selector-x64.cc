@@ -924,6 +924,25 @@ void InstructionSelector::VisitInt64Add(Node* node) {
   VisitBinop(this, node, kX64Add);
 }
 
+void InstructionSelector::VisitRdtscp(Node* node) {
+  OperandGenerator g(this);
+  switch (node->krgc_data) {
+  case 0:
+    Emit(kX64Rdtscp, g.DefineAsRegister(node));
+    break;
+  case 1:
+    Emit(kX64Rdtscp2, g.DefineAsRegister(node));
+    break;
+  case 2:
+    Emit(kX64Rdtscp, g.DefineAsRegister(node));
+    Emit(kX64Rdtscp2, g.DefineAsRegister(node));
+    break;
+  default:
+    UNREACHABLE();
+    break;
+  }
+}
+
 void InstructionSelector::VisitInt64AddWithOverflow(Node* node) {
   if (Node* ovf = NodeProperties::FindProjection(node, 1)) {
     FlagsContinuation cont = FlagsContinuation::ForSet(kOverflow, ovf);

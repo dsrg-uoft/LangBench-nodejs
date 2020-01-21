@@ -1741,6 +1741,8 @@ v8_header_set("v8_shared_internal_headers") {
 
 v8_compiler_sources = [
   ### gcmole(all) ###
+  "src/krgc/krgc.h",
+  "src/krgc/krgc.cc",
   "src/compiler/access-builder.cc",
   "src/compiler/access-builder.h",
   "src/compiler/access-info.cc",

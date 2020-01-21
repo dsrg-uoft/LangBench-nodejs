@@ -12,6 +12,8 @@ namespace compiler {
 // X64-specific opcodes that specify which assembly sequence to emit.
 // Most opcodes specify a single instruction.
 #define TARGET_ARCH_OPCODE_LIST(V)        \
+  V(X64Rdtscp)                            \
+  V(X64Rdtscp2)                           \
   V(X64Add)                               \
   V(X64Add32)                             \
   V(X64And)                               \

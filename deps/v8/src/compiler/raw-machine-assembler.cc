@@ -15,6 +15,22 @@ namespace v8 {
 namespace internal {
 namespace compiler {
 
+#include "src/krgc/krgc.h"
+#include "src/codegen/external-reference.h"
+Node* RawMachineAssembler::Rdtscp(krgc::location loc, int data) {
+  if (krgc::loc() != loc) {
+    return nullptr;
+  }
+
+  Node* n = AddNode(simplified()->Rdtscp());
+  n->krgc_data = data;
+  return n;
+  /*
+  TNode<ExternalReference> function = code_assembler_->ExternalConstant(ExternalReference::rdtscp_c());
+  CallCFunction(function, MachineType::IntPtr());
+  */
+}
+
 RawMachineAssembler::RawMachineAssembler(
     Isolate* isolate, Graph* graph, CallDescriptor* call_descriptor,
     MachineRepresentation word, MachineOperatorBuilder::Flags flags,
@@ -101,14 +117,14 @@ Schedule* RawMachineAssembler::ExportForTest() {
 Graph* RawMachineAssembler::ExportForOptimization() {
   // Compute the correct codegen order.
   DCHECK(schedule_->rpo_order()->empty());
-  if (FLAG_trace_turbo_scheduler) {
+  if (/*true ||*/ FLAG_trace_turbo_scheduler) {
     PrintF("--- RAW SCHEDULE -------------------------------------------\n");
     StdoutStream{} << *schedule_;
   }
   schedule_->EnsureCFGWellFormedness();
   OptimizeControlFlow(schedule_, graph(), common());
   Scheduler::ComputeSpecialRPO(zone(), schedule_);
-  if (FLAG_trace_turbo_scheduler) {
+  if (/*true ||*/ FLAG_trace_turbo_scheduler) {
     PrintF("--- SCHEDULE BEFORE GRAPH CREATION -------------------------\n");
     StdoutStream{} << *schedule_;
   }

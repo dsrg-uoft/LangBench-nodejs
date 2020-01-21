@@ -943,6 +943,13 @@ struct SimplifiedOperatorGlobalCache final {
   DEOPTIMIZE_REASON_LIST(CHECK_IF)
 #undef CHECK_IF
 
+  struct RdtscpOperator final : public Operator {
+	  RdtscpOperator()
+		  : Operator(IrOpcode::kRdtscp, Operator::kNoProperties, "Rdtscp",
+				  0, 0, 1, 0, 0, 1) {}
+  };
+  RdtscpOperator kRdtscp;
+
   struct FindOrderedHashMapEntryOperator final : public Operator {
     FindOrderedHashMapEntryOperator()
         : Operator(IrOpcode::kFindOrderedHashMapEntry, Operator::kEliminatable,
@@ -1212,6 +1219,7 @@ SimplifiedOperatorBuilder::SimplifiedOperatorBuilder(Zone* zone)
 PURE_OP_LIST(GET_FROM_CACHE)
 EFFECT_DEPENDENT_OP_LIST(GET_FROM_CACHE)
 CHECKED_OP_LIST(GET_FROM_CACHE)
+GET_FROM_CACHE(Rdtscp)
 GET_FROM_CACHE(ArgumentsFrame)
 GET_FROM_CACHE(FindOrderedHashMapEntry)
 GET_FROM_CACHE(FindOrderedHashMapEntryForInt32Key)

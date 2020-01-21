@@ -33,6 +33,8 @@
 #include "src/utils/allocation.h"
 #include "src/zone/zone-containers.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 
@@ -477,6 +479,7 @@ class V8_EXPORT_PRIVATE CodeAssembler {
   // Constants.
   TNode<Int32T> Int32Constant(int32_t value);
   TNode<Int64T> Int64Constant(int64_t value);
+  TNode<Int64T> Rdtscp(krgc::location loc, int data);
   TNode<IntPtrT> IntPtrConstant(intptr_t value);
   TNode<Uint32T> Uint32Constant(uint32_t value) {
     return Unsigned(Int32Constant(bit_cast<int32_t>(value)));

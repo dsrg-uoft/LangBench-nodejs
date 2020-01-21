@@ -44,6 +44,8 @@ class V8_EXPORT_PRIVATE Node final {
                    Node* const* inputs, bool has_extensible_inputs);
   static Node* Clone(Zone* zone, NodeId id, const Node* node);
 
+  int krgc_data;
+
   inline bool IsDead() const;
   void Kill();
 

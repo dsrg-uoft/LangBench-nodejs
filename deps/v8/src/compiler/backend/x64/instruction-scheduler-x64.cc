@@ -364,6 +364,8 @@ int InstructionScheduler::GetTargetInstructionFlags(
     case kX64Peek:
       return kIsLoadOperation;
 
+    case kX64Rdtscp:
+    case kX64Rdtscp2:
     case kX64Push:
     case kX64Poke:
       return kHasSideEffect;

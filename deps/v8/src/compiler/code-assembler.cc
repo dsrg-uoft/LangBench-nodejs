@@ -24,6 +24,8 @@
 #include "src/utils/memcopy.h"
 #include "src/zone/zone.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 
@@ -247,6 +249,10 @@ TNode<Int64T> CodeAssembler::Int64Constant(int64_t value) {
   return UncheckedCast<Int64T>(raw_assembler()->Int64Constant(value));
 }
 
+TNode<Int64T> CodeAssembler::Rdtscp(krgc::location loc, int data) {
+  return UncheckedCast<Int64T>(raw_assembler()->Rdtscp(loc, data));
+}
+
 TNode<IntPtrT> CodeAssembler::IntPtrConstant(intptr_t value) {
   return UncheckedCast<IntPtrT>(raw_assembler()->IntPtrConstant(value));
 }
@@ -426,7 +432,7 @@ void CodeAssembler::Unreachable() {
 }
 
 void CodeAssembler::Comment(std::string str) {
-  if (!FLAG_code_comments) return;
+  //if (!FLAG_code_comments) return;
   raw_assembler()->Comment(str);
 }
 

@@ -26,7 +26,7 @@ class ThreadLocalTop {
   // TODO(all): This is not particularly beautiful. We should probably
   // refactor this to really consist of just Addresses and 32-bit
   // integer fields.
-  static constexpr uint32_t kSizeInBytes = 24 * kSystemPointerSize;
+  static constexpr uint32_t kSizeInBytes = 27 * kSystemPointerSize;
 
   // Does early low-level initialization that does not depend on the
   // isolate being present.
@@ -102,6 +102,9 @@ class ThreadLocalTop {
   Address pending_handler_constant_pool_ = kNullAddress;
   Address pending_handler_fp_ = kNullAddress;
   Address pending_handler_sp_ = kNullAddress;
+  Address rdtscp_start_ = kNullAddress;
+  Address rdtscp_total_ = kNullAddress;
+  Address rdtscp_count_ = kNullAddress;
 
   Address last_api_entry_ = kNullAddress;
 

@@ -523,7 +523,8 @@
   V(Word32Ctz)                  \
   V(Int32AbsWithOverflow)       \
   V(Word32ReverseBits)          \
-  V(Word32ReverseBytes)
+  V(Word32ReverseBytes)         \
+  V(Rdtscp)
 
 #define MACHINE_BINOP_32_LIST(V) \
   V(Word32And)                   \

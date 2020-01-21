@@ -19,6 +19,8 @@
 #include "src/wasm/wasm-code-manager.h"
 #include "src/wasm/wasm-objects.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -2186,6 +2188,67 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
       break;
     case kX64Inc32:
       __ incl(i.OutputRegister());
+      break;
+    case kX64Rdtscp:
+      __ pushq(rax);
+      __ pushq(rcx);
+      __ pushq(rdx);
+      switch (krgc::insn()) {
+      case krgc::instruction::rdtscp:
+        __ rdtscp();
+        break;
+      case krgc::instruction::rdpmc:
+        __ cpuid();
+        __ movl(rcx, Immediate(1 << 30));
+        __ rdpmc();
+        break;
+      default:
+        UNREACHABLE();
+        break;
+      }
+      __ shlq(rdx, Immediate(32));
+      __ orq(rax, rdx);
+      __ LoadAddress(rcx, ExternalReference::Create(IsolateAddressId::kRdtscpStartAddress, isolate()));
+      __ movq(MemOperand(rcx, 0), rax);
+      //__ PrepareCallCFunction(0);
+      //__ CallCFunction(ExternalReference::wasm_call_trap_callback_for_testing(), 0);
+      __ popq(rdx);
+      __ popq(rcx);
+      __ popq(rax);
+      break;
+    case kX64Rdtscp2:
+      __ pushq(rax);
+      __ pushq(rcx);
+      __ pushq(rdx);
+      switch (krgc::insn()) {
+      case krgc::instruction::rdtscp:
+        __ rdtscp();
+        break;
+      case krgc::instruction::rdpmc:
+        __ cpuid();
+        __ movl(rcx, Immediate(1 << 30));
+        __ rdpmc();
+        break;
+      default:
+        UNREACHABLE();
+        break;
+      }
+      __ shlq(rdx, Immediate(32));
+      __ orq(rax, rdx);
+      __ LoadAddress(rcx, ExternalReference::Create(IsolateAddressId::kRdtscpStartAddress, isolate()));
+      __ movq(rcx, MemOperand(rcx, 0));
+      __ subq(rax, rcx);
+      __ LoadAddress(rcx, ExternalReference::Create(IsolateAddressId::kRdtscpTotalAddress, isolate()));
+      __ movq(rdx, MemOperand(rcx, 0));
+      __ addq(rdx, rax);
+      __ movq(MemOperand(rcx, 0), rdx);
+      __ LoadAddress(rcx, ExternalReference::Create(IsolateAddressId::kRdtscpCountAddress, isolate()));
+      __ movq(rdx, MemOperand(rcx, 0));
+      __ incq(rdx);
+      __ movq(MemOperand(rcx, 0), rdx);
+      __ popq(rdx);
+      __ popq(rcx);
+      __ popq(rax);
       break;
     case kX64Push:
       if (HasAddressingMode(instr)) {

@@ -89,6 +89,7 @@ class StatsCounter;
   V(re_word_character_map, "NativeRegExpMacroAssembler::word_character_map")
 
 #define EXTERNAL_REFERENCE_LIST(V)                                            \
+  /*V(rdtscp_c, "rdtscp_c")*/                                                 \
   V(abort_with_reason, "abort_with_reason")                                   \
   V(address_of_double_abs_constant, "double_absolute_constant")               \
   V(address_of_double_neg_constant, "double_negate_constant")                 \

@@ -2084,6 +2084,19 @@ void Assembler::popfq() {
   emit(0x9D);
 }
 
+void Assembler::rdtscp() {
+  EnsureSpace ensure_space(this);
+  emit(0x0F);
+  emit(0x01);
+  emit(0xF9);
+}
+
+void Assembler::rdpmc() {
+  EnsureSpace ensure_space(this);
+  emit(0x0F);
+  emit(0x33);
+}
+
 void Assembler::pushq(Register src) {
   EnsureSpace ensure_space(this);
   emit_optional_rex_32(src);

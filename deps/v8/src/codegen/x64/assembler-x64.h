@@ -482,6 +482,8 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase {
   void pushq_imm32(int32_t imm32);
   void pushq(Register src);
   void pushq(Operand src);
+  void rdtscp();
+  void rdpmc();
 
   void popq(Register dst);
   void popq(Operand dst);

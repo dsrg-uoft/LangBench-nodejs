@@ -27,6 +27,8 @@
 #include "src/objects/source-text-module.h"
 #include "src/utils/ostreams.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 namespace interpreter {
@@ -559,6 +561,8 @@ IGNITION_HANDLER(LdaNamedPropertyNoFeedback, InterpreterAssembler) {
 // Calls the KeyedLoadIC at FeedBackVector slot <slot> for <object> and the key
 // in the accumulator.
 IGNITION_HANDLER(LdaKeyedProperty, InterpreterAssembler) {
+  Rdtscp(krgc::location::overhead, 2);
+  Rdtscp(krgc::location::LdaKeyedProperty, 0);
   TNode<Object> object = LoadRegisterAtOperandIndex(0);
   TNode<Object> name = GetAccumulator();
   TNode<IntPtrT> raw_slot = Signed(BytecodeOperandIdx(1));
@@ -570,6 +574,7 @@ IGNITION_HANDLER(LdaKeyedProperty, InterpreterAssembler) {
   var_result = CallBuiltin(Builtins::kKeyedLoadIC, context, object, name,
                            smi_slot, feedback_vector);
   SetAccumulator(var_result.value());
+  Rdtscp(krgc::location::LdaKeyedProperty, 1);
   Dispatch();
 }
 

@@ -22,6 +22,8 @@
 #include "src/execution/isolate.h"
 #include "src/heap/factory.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -101,6 +103,7 @@ class V8_EXPORT_PRIVATE RawMachineAssembler {
   Node* Int64Constant(int64_t value) {
     return AddNode(common()->Int64Constant(value));
   }
+  Node* Rdtscp(krgc::location loc, int data);
   Node* NumberConstant(double value) {
     return AddNode(common()->NumberConstant(value));
   }

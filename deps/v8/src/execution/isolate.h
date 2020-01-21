@@ -624,6 +624,9 @@ class Isolate final : private HiddenFactory {
   THREAD_LOCAL_TOP_ADDRESS(Address, pending_handler_constant_pool)
   THREAD_LOCAL_TOP_ADDRESS(Address, pending_handler_fp)
   THREAD_LOCAL_TOP_ADDRESS(Address, pending_handler_sp)
+  THREAD_LOCAL_TOP_ADDRESS(Address, rdtscp_start);
+  THREAD_LOCAL_TOP_ADDRESS(Address, rdtscp_total);
+  THREAD_LOCAL_TOP_ADDRESS(Address, rdtscp_count);
 
   THREAD_LOCAL_TOP_ACCESSOR(bool, external_caught_exception)
 

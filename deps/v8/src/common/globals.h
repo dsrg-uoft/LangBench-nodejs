@@ -1480,6 +1480,9 @@ enum class BlockingBehavior { kBlock, kDontBlock };
 enum class ConcurrencyMode { kNotConcurrent, kConcurrent };
 
 #define FOR_EACH_ISOLATE_ADDRESS_NAME(C)                       \
+  C(RdtscpStart, rdtscp_start)                                 \
+  C(RdtscpTotal, rdtscp_total)                                 \
+  C(RdtscpCount, rdtscp_count)                                 \
   C(Handler, handler)                                          \
   C(CEntryFP, c_entry_fp)                                      \
   C(CFunction, c_function)                                     \

@@ -1479,6 +1479,8 @@ void InstructionSelector::VisitNode(Node* node) {
       return VisitUint32MulHigh(node);
     case IrOpcode::kInt64Add:
       return MarkAsWord64(node), VisitInt64Add(node);
+    case IrOpcode::kRdtscp:
+      return MarkAsWord64(node), VisitRdtscp(node);
     case IrOpcode::kInt64AddWithOverflow:
       return MarkAsWord64(node), VisitInt64AddWithOverflow(node);
     case IrOpcode::kInt64Sub:
@@ -2395,6 +2397,8 @@ void InstructionSelector::VisitWord64Popcnt(Node* node) { UNIMPLEMENTED(); }
 void InstructionSelector::VisitWord64Equal(Node* node) { UNIMPLEMENTED(); }
 
 void InstructionSelector::VisitInt64Add(Node* node) { UNIMPLEMENTED(); }
+
+void InstructionSelector::VisitRdtscp(Node* node) { UNIMPLEMENTED(); }
 
 void InstructionSelector::VisitInt64AddWithOverflow(Node* node) {
   UNIMPLEMENTED();

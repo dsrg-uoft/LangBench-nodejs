@@ -930,6 +930,7 @@ class V8_EXPORT_PRIVATE SimplifiedOperatorBuilder final
   const Operator* AssertType(Type type);
 
   const Operator* DateNow();
+  const Operator* Rdtscp();
 
  private:
   Zone* zone() const { return zone_; }

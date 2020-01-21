@@ -2214,6 +2214,9 @@ int DisassemblerX64::TwoByteOpcodeInstruction(byte* data) {
   } else if (opcode == 0xA2) {
     // CPUID
     AppendToBuffer("%s", mnemonic);
+  } else if (opcode == 0x33) {
+    // rdpmc
+    AppendToBuffer("%s", mnemonic);
   } else if ((opcode & 0xF0) == 0x40) {
     // CMOVcc: conditional move.
     int condition = opcode & 0x0F;
@@ -2321,6 +2324,9 @@ int DisassemblerX64::TwoByteOpcodeInstruction(byte* data) {
   } else if (opcode == 0xAE && (data[2] & 0xF8) == 0xE8) {
     AppendToBuffer("lfence");
     current = data + 3;
+  } else if (opcode == 0x01 && data[2] == 0xF9) {
+    AppendToBuffer("rdtscp");
+    current = data + 3;
   } else {
     UnimplementedInstruction();
   }
@@ -2355,6 +2361,8 @@ const char* DisassemblerX64::TwoByteMnemonic(byte opcode) {
       return (group_1_prefix_ == 0xF2) ? "maxsd" : "maxss";
     case 0xA2:
       return "cpuid";
+    case 0x33:
+      return "rdpmc";
     case 0xA3:
       return "bt";
     case 0xA5:

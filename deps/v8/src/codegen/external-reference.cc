@@ -214,6 +214,13 @@ struct IsValidExternalReferenceType<Result (Class::*)(Args...)> {
     return ExternalReference(Redirect(FUNCTION_ADDR(Target), Type));       \
   }
 
+#include <stdio.h>
+void rdtscp_c() {
+	printf("fake rdtscp\n");
+}
+
+//FUNCTION_REFERENCE(rdtscp_c, rdtscp_c)
+
 FUNCTION_REFERENCE(incremental_marking_record_write_function,
                    IncrementalMarking::RecordWriteFromCode)
 

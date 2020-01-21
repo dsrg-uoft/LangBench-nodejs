@@ -3483,6 +3483,9 @@ class RepresentationSelector {
       case IrOpcode::kDateNow:
         VisitInputs(node);
         return SetOutput(node, MachineRepresentation::kTaggedPointer);
+      case IrOpcode::kRdtscp:
+        VisitInputs(node);
+        return SetOutput(node, MachineRepresentation::kTaggedPointer);
       case IrOpcode::kFrameState:
         return VisitFrameState(node);
       case IrOpcode::kStateValues:
