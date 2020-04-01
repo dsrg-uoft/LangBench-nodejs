@@ -28,6 +28,8 @@
 #include "src/objects/js-array-inl.h"
 #include "src/objects/templates.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -2857,6 +2859,7 @@ JSNativeContextSpecialization::BuildElementAccess(
 
     // Access the actual element.
     if (keyed_mode.access_mode() == AccessMode::kLoad) {
+      // hottub3 TRACED INSIDE HERE
       // Compute the real element access type, which includes the hole in case
       // of holey backing stores.
       if (IsHoleyElementsKind(elements_kind)) {
@@ -2920,11 +2923,16 @@ JSNativeContextSpecialization::BuildElementAccess(
             graph()->NewNode(common()->Phi(MachineRepresentation::kTagged, 2),
                              vtrue, vfalse, control);
       } else {
+        // hottub3: the chosen path
         // Perform the actual load.
         value = effect =
             graph()->NewNode(simplified()->LoadElement(element_access),
                              elements, index, effect, control);
 
+        if (krgc::has_money() && krgc::skip_check(krgc::check::array_hole)) {
+            //printf("[hottub3] skipping definition check\n");
+            // this removes the defined check after dereferencing the board
+        } else {
         // Handle loading from holey backing stores correctly, by either mapping
         // the hole to undefined if possible, or deoptimizing otherwise.
         if (elements_kind == HOLEY_ELEMENTS ||
@@ -2951,6 +2959,7 @@ JSNativeContextSpecialization::BuildElementAccess(
           value = effect = graph()->NewNode(
               simplified()->CheckFloat64Hole(mode, FeedbackSource()), value,
               effect, control);
+        }
         }
       }
     } else if (keyed_mode.access_mode() == AccessMode::kHas) {

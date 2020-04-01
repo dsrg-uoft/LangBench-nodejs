@@ -2198,6 +2198,7 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
         __ rdtscp();
         break;
       case krgc::instruction::rdpmc:
+        __ pushq(rbx);
         __ cpuid();
         __ movl(rcx, Immediate(1 << 30));
         __ rdpmc();
@@ -2212,6 +2213,9 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
       __ movq(MemOperand(rcx, 0), rax);
       //__ PrepareCallCFunction(0);
       //__ CallCFunction(ExternalReference::wasm_call_trap_callback_for_testing(), 0);
+      if (krgc::insn() == krgc::instruction::rdpmc) {
+        __ popq(rbx);
+      }
       __ popq(rdx);
       __ popq(rcx);
       __ popq(rax);
@@ -2225,6 +2229,7 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
         __ rdtscp();
         break;
       case krgc::instruction::rdpmc:
+        __ pushq(rbx);
         __ cpuid();
         __ movl(rcx, Immediate(1 << 30));
         __ rdpmc();
@@ -2246,6 +2251,9 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
       __ movq(rdx, MemOperand(rcx, 0));
       __ incq(rdx);
       __ movq(MemOperand(rcx, 0), rdx);
+      if (krgc::insn() == krgc::instruction::rdpmc) {
+        __ popq(rbx);
+      }
       __ popq(rdx);
       __ popq(rcx);
       __ popq(rax);

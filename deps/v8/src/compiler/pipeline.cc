@@ -92,6 +92,8 @@
 #include "src/wasm/function-compiler.h"
 #include "src/wasm/wasm-engine.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -2256,6 +2258,15 @@ void PipelineImpl::Serialize() {
 
   data->BeginPhaseKind("V8.TFBrokerInitAndSerialization");
 
+  if (strcmp(info()->GetDebugName().get(), "partial_verify") == 0) {
+    printf("[hottub3] CreateGraph partial_verify\n");
+    krgc::make_rich(true);
+  }
+  if (strcmp(info()->GetDebugName().get(), "solve") == 0) {
+    printf("[hottub3] CreateGraph solve\n");
+    krgc::make_rich(true);
+  }
+
   if (info()->trace_turbo_json_enabled() ||
       info()->trace_turbo_graph_enabled()) {
     CodeTracer::Scope tracing_scope(data->GetCodeTracer());
@@ -2324,6 +2335,7 @@ bool PipelineImpl::CreateGraph() {
 
   data->EndPhaseKind();
 
+  krgc::make_rich(false);
   return true;
 }
 
@@ -2331,6 +2343,15 @@ bool PipelineImpl::OptimizeGraph(Linkage* linkage) {
   PipelineData* data = this->data_;
 
   data->BeginPhaseKind("V8.TFLowering");
+
+  if (strcmp(info()->GetDebugName().get(), "partial_verify") == 0) {
+    printf("[hottub3] OptimizeGraph partial_verify\n");
+    krgc::make_rich(true);
+  }
+  if (strcmp(info()->GetDebugName().get(), "solve") == 0) {
+    printf("[hottub3] OptimizeGraph solve\n");
+    krgc::make_rich(true);
+  }
 
   // Type the graph and keep the Typer running such that new nodes get
   // automatically typed when they are created.
@@ -2430,6 +2451,8 @@ bool PipelineImpl::OptimizeGraph(Linkage* linkage) {
   }
 
   ComputeScheduledGraph();
+
+  krgc::make_rich(false);
 
   return SelectInstructions(linkage);
 }

@@ -24,6 +24,8 @@
 #include "src/objects/oddball.h"
 #include "src/objects/ordered-hash-table.h"
 
+#include "src/krgc/krgc.h"
+
 namespace v8 {
 namespace internal {
 namespace compiler {
@@ -1869,6 +1871,9 @@ void EffectControlLinearizer::LowerCheckMaps(Node* node, Node* frame_state) {
     // Load the current map of the {value}.
     Node* value_map = __ LoadField(AccessBuilder::ForMap(), value);
 
+    if (krgc::has_money() && krgc::skip_check(krgc::check::shape)) {
+      //printf("[hottub3] LowerCheckMaps (shape)\n");
+    } else {
     for (size_t i = 0; i < map_count; ++i) {
       Node* map = __ HeapConstant(maps[i]);
       Node* check = __ TaggedEqual(value_map, map);
@@ -1881,6 +1886,7 @@ void EffectControlLinearizer::LowerCheckMaps(Node* node, Node* frame_state) {
         __ Branch(check, &done, &next_map, IsSafetyCheck::kCriticalSafetyCheck);
         __ Bind(&next_map);
       }
+    }
     }
     __ Goto(&done);
     __ Bind(&done);
@@ -2419,6 +2425,9 @@ Node* EffectControlLinearizer::LowerCheckedUint32Bounds(Node* node,
   Node* limit = node->InputAt(1);
   const CheckBoundsParameters& params = CheckBoundsParametersOf(node->op());
 
+  if (krgc::has_money() && krgc::skip_check(krgc::check::array_length)) {
+      //printf("[hottub3] LowerCheckedUint32Bounds\n");
+  } else {
   Node* check = __ Uint32LessThan(index, limit);
   switch (params.mode()) {
     case CheckBoundsParameters::kDeoptOnOutOfBounds:
@@ -2439,6 +2448,7 @@ Node* EffectControlLinearizer::LowerCheckedUint32Bounds(Node* node,
       __ Bind(&done);
       break;
     }
+  }
   }
 
   return index;
@@ -2470,9 +2480,14 @@ Node* EffectControlLinearizer::LowerCheckedUint64Bounds(Node* node,
   Node* const index = node->InputAt(0);
   Node* const limit = node->InputAt(1);
 
+  if (krgc::has_money() && krgc::skip_check(krgc::check::array_length)) {
+      //printf("[hottub3] LowerCheckedUint64Bounds\n");
+  } else {
+
   Node* check = __ Uint64LessThan(index, limit);
   __ DeoptimizeIfNot(DeoptimizeReason::kOutOfBounds, params.feedback(), check,
                      frame_state, IsSafetyCheck::kCriticalSafetyCheck);
+  }
   return index;
 }
 
@@ -2580,10 +2595,14 @@ Node* EffectControlLinearizer::LowerCheckedFloat64ToInt64(Node* node,
 Node* EffectControlLinearizer::LowerCheckedTaggedSignedToInt32(
     Node* node, Node* frame_state) {
   Node* value = node->InputAt(0);
+  if (krgc::has_money() && krgc::skip_check(krgc::check::smi)) {
+      //printf("[hottub3] LowerCheckedTaggedSignedToInt32\n");
+  } else {
   const CheckParameters& params = CheckParametersOf(node->op());
   Node* check = ObjectIsSmi(value);
   __ DeoptimizeIfNot(DeoptimizeReason::kNotASmi, params.feedback(), check,
                      frame_state);
+  }
   return ChangeSmiToInt32(value);
 }
 
@@ -2711,23 +2730,31 @@ Node* EffectControlLinearizer::LowerCheckedTaggedToFloat64(Node* node,
 Node* EffectControlLinearizer::LowerCheckedTaggedToTaggedSigned(
     Node* node, Node* frame_state) {
   Node* value = node->InputAt(0);
+  if (krgc::has_money() && krgc::skip_check(krgc::check::smi)) {
+      //printf("[hottub3] LowerCheckedTaggedToTaggedSigned\n");
+  } else {
   const CheckParameters& params = CheckParametersOf(node->op());
 
   Node* check = ObjectIsSmi(value);
   __ DeoptimizeIfNot(DeoptimizeReason::kNotASmi, params.feedback(), check,
                      frame_state);
 
+  }
   return value;
 }
 
 Node* EffectControlLinearizer::LowerCheckedTaggedToTaggedPointer(
     Node* node, Node* frame_state) {
   Node* value = node->InputAt(0);
+  if (krgc::has_money() && krgc::skip_check(krgc::check::smi)) {
+      //printf("[hottub3] LowerCheckedTaggedToTaggedPointer\n");
+  } else {
   const CheckParameters& params = CheckParametersOf(node->op());
 
   Node* check = ObjectIsSmi(value);
   __ DeoptimizeIf(DeoptimizeReason::kSmi, params.feedback(), check,
                   frame_state);
+  }
   return value;
 }
 
@@ -2849,12 +2876,15 @@ Node* EffectControlLinearizer::LowerTruncateBigIntToUint64(Node* node) {
 Node* EffectControlLinearizer::LowerCheckedCompressedToTaggedSigned(
     Node* node, Node* frame_state) {
   Node* value = node->InputAt(0);
+  if (krgc::has_money() && krgc::skip_check(krgc::check::smi)) {
+      //printf("[hottub3] LowerCheckedCompressedToTaggedSigned\n");
+  } else {
   const CheckParameters& params = CheckParametersOf(node->op());
 
   Node* check = CompressedObjectIsSmi(value);
   __ DeoptimizeIfNot(DeoptimizeReason::kNotASmi, params.feedback(), check,
                      frame_state);
-
+  }
   return __ ChangeCompressedSignedToTaggedSigned(value);
 }
 
@@ -2874,10 +2904,13 @@ Node* EffectControlLinearizer::LowerCheckedTaggedToCompressedSigned(
   Node* value = node->InputAt(0);
   const CheckParameters& params = CheckParametersOf(node->op());
 
+  if (krgc::has_money() && krgc::skip_check(krgc::check::smi)) {
+      //printf("[hottub3] LowerCheckedTaggedToCompressedSigned\n");
+  } else {
   Node* check = ObjectIsSmi(value);
   __ DeoptimizeIfNot(DeoptimizeReason::kNotASmi, params.feedback(), check,
                      frame_state);
-
+  }
   return __ ChangeTaggedSignedToCompressedSigned(value);
 }
 
