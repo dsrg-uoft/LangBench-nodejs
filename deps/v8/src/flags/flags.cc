@@ -19,6 +19,7 @@
 #include "src/utils/ostreams.h"
 #include "src/utils/utils.h"
 #include "src/wasm/wasm-limits.h"
+#include "src/krgc/krgc.h"
 
 namespace v8 {
 namespace internal {
@@ -503,6 +504,8 @@ int FlagList::SetFlagsFromCommandLine(int* argc, char** argv,
     }
   }
   if (return_code != 0) PrintF(stderr, "Try --help for options\n");
+
+  krgc::make_bank(FLAG_krgc_filter);
 
   return return_code;
 }

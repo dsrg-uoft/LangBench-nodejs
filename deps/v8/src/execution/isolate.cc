@@ -3616,9 +3616,9 @@ void Isolate::Exit() {
          entry_stack_->previous_thread_data->thread_id() ==
              ThreadId::Current());
 
-  printf("[hottub3] ISOLATE EXIT\n");
-  printf("[hottub3] rdtscp total is: %lu\n", *((uint64_t*) this->rdtscp_total_address()));
-  printf("[hottub3] rdtscp count is: %lu\n", *((uint64_t*) this->rdtscp_count_address()));
+  // printf("[hottub3] ISOLATE EXIT\n");
+  // printf("[hottub3] rdtscp total is: %lu\n", *((uint64_t*) this->rdtscp_total_address()));
+  // printf("[hottub3] rdtscp count is: %lu\n", *((uint64_t*) this->rdtscp_count_address()));
 
   if (--entry_stack_->entry_count > 0) return;
 

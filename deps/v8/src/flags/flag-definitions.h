@@ -500,6 +500,10 @@ DEFINE_INT(deopt_every_n_times, 0,
            "deoptimize every n times a deopt point is passed")
 DEFINE_BOOL(print_deopt_stress, false, "print number of possible deopt points")
 
+// hottub
+DEFINE_STRING(krgc_filter, nullptr,
+              "comma separated list of function names to compile unsafe")
+
 // Flags for TurboFan.
 DEFINE_BOOL(opt, true, "use adaptive optimizations")
 DEFINE_BOOL(turbo_sp_frame_access, false,

@@ -2258,14 +2258,7 @@ void PipelineImpl::Serialize() {
 
   data->BeginPhaseKind("V8.TFBrokerInitAndSerialization");
 
-  if (strcmp(info()->GetDebugName().get(), "partial_verify") == 0) {
-    printf("[hottub3] CreateGraph partial_verify\n");
-    krgc::make_rich(true);
-  }
-  if (strcmp(info()->GetDebugName().get(), "solve") == 0) {
-    printf("[hottub3] CreateGraph solve\n");
-    krgc::make_rich(true);
-  }
+  krgc::count_cash(info()->GetDebugName().get());
 
   if (info()->trace_turbo_json_enabled() ||
       info()->trace_turbo_graph_enabled()) {
@@ -2292,12 +2285,15 @@ void PipelineImpl::Serialize() {
     data->broker()->StopSerializing();
   }
   data->EndPhaseKind();
+  krgc::make_rich(false);
 }
 
 bool PipelineImpl::CreateGraph() {
   PipelineData* data = this->data_;
 
   data->BeginPhaseKind("V8.TFGraphCreation");
+
+  krgc::count_cash(info()->GetDebugName().get());
 
   Run<GraphBuilderPhase>();
   RunPrintAndVerify(GraphBuilderPhase::phase_name(), true);
@@ -2344,14 +2340,7 @@ bool PipelineImpl::OptimizeGraph(Linkage* linkage) {
 
   data->BeginPhaseKind("V8.TFLowering");
 
-  if (strcmp(info()->GetDebugName().get(), "partial_verify") == 0) {
-    printf("[hottub3] OptimizeGraph partial_verify\n");
-    krgc::make_rich(true);
-  }
-  if (strcmp(info()->GetDebugName().get(), "solve") == 0) {
-    printf("[hottub3] OptimizeGraph solve\n");
-    krgc::make_rich(true);
-  }
+  krgc::count_cash(info()->GetDebugName().get());
 
   // Type the graph and keep the Typer running such that new nodes get
   // automatically typed when they are created.

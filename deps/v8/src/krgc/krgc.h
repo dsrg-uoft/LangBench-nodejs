@@ -37,6 +37,8 @@ class krgc {
   static void make_rich(bool);
   static bool has_money();
   static bool skip_check(check c) { return krgc::jit_flag & static_cast<uint32_t>(c); }
+  static void make_bank(const char* functions);
+  static void count_cash(const char* function);
 };
 
 #endif  // KRGC_H_
